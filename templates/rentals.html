@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='rentals.css') }}">
+    <title>Rentals</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Rentals</h1>
+        </header>
+
+        <!-- Form to add a new rental -->
+        <form action="/rentals" method="POST" class="rental-form">
+            <h2>Add a New Rental</h2>
+            <div class="form-group">
+                <label for="car_id">Car ID:</label>
+                <input type="text" id="car_id" name="car_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="customer_id">Customer ID:</label>
+                <input type="text" id="customer_id" name="customer_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rental_start_date">Start Date:</label>
+                <input type="date" id="rental_start_date" name="rental_start_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rental_end_date">End Date:</label>
+                <input type="date" id="rental_end_date" name="rental_end_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="payment_status">Payment Status:</label>
+                <select id="payment_status" name="payment_status" required>
+                    <option value="">Select Payment Status</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="">Select Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Completed">Completed</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-button">Add Rental</button>
+        </form>
+    </div>
+    <div>
+        <!-- Table to display all rentals -->
+        <h2>Rental Records</h2>
+        <table class="rentals-table">
+            <thead>
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Customer ID</th>
+                    <th>Car ID</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Total Rent</th>
+                    <th>Payment Status</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rental in rentals %}
+                <tr>
+                    <td>{{ rental['rental_id'] }}</td>
+                    <td>{{ rental['customer_id'] }}</td>
+                    <td>{{ rental['car_id'] }} </td>
+                    <td>{{ rental['rental_start_date'] }}</td>
+                    <td>{{ rental['rental_end_date'] }}</td>
+                    <td>{{ rental['total_rent'] }}</td>
+                    <td>{{ rental['payment_status'] }}</td>
+                    <td>{{ rental['status'] }}</td>
+                    <td>
+                        <!-- Edit Button -->
+                        <button type="button" class="toggle-update-button">Edit</button>
+                        <div class="update-form">
+                            <form action="/update_rental/{{ rental['rental_id'] }}" method="POST">
+                                <div class="form-group">
+                                    <label for="update_customer_id_{{ rental['rental_id'] }}">Customer ID:</label>
+                                    <input type="text" id="update_customer_id_{{ rental['rental_id'] }}" name="customer_id" value="{{ rental['customer_id'] }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="update_car_id_{{ rental['rental_id'] }}">Car ID:</label>
+                                    <input type="text" id="update_car_id_{{ rental['rental_id'] }}" name="car_id" value="{{ rental['car_id'] }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="update_rental_start_date_{{ rental['rental_id'] }}">Start Date:</label>
+                                    <input type="date" id="update_rental_start_date_{{ rental['rental_id'] }}" name="rental_start_date" value="{{ rental['rental_start_date'] }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="update_rental_end_date_{{ rental['rental_id'] }}">End Date:</label>
+                                    <input type="date" id="update_rental_end_date_{{ rental['rental_id'] }}" name="rental_end_date" value="{{ rental['rental_end_date'] }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="update_payment_status_{{ rental['rental_id'] }}">Payment Status:</label>
+                                    <select id="update_payment_status_{{ rental['rental_id'] }}" name="payment_status" required>
+                                        <option value="Paid" {% if rental['payment_status'] == 'Paid' %}selected{% endif %}>Paid</option>
+                                        <option value="Pending" {% if rental['payment_status'] == 'Pending' %}selected{% endif %}>Pending</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="update_status_{{ rental['rental_id'] }}">Status:</label>
+                                    <select id="update_status_{{ rental['rental_id'] }}" name="status" required>
+                                        <option value="Active" {% if rental['status'] == 'Active' %}selected{% endif %}>Active</option>
+                                        <option value="Completed" {% if rental['status'] == 'Completed' %}selected{% endif %}>Completed</option>
+                                        <option value="Cancelled" {% if rental['status'] == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit">Update</button>
+                            </form>
+                        </div>
+
+                        <!-- Delete Button -->
+                        <form action="/delete_rental/{{ rental['rental_id'] }}" method="POST" style="display:inline;">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9">No rentals found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // JavaScript to toggle the update form visibility
+        const toggleButtons = document.querySelectorAll('.toggle-update-button');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const updateForm = button.nextElementSibling;
+                updateForm.style.display = updateForm.style.display === "none" || updateForm.style.display === "" ? "block" : "none";
+            });
+        });
+    </script>
+</body>
+</html>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        overflow-y: auto; /* Allow vertical scrolling */
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .rental-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .form-group:last-child {
+        margin-right: 0;
+    }
+
+    /* Additional space between the car ID and customer ID fields */
+    .form-group:nth-child(2) {
+        margin-left: 15px; /* Adjust this value to set the desired spacing */
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"], input[type="date"], select {
+        width: 100%;
+        padding: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 30px; /* Increased height to prevent shrinking */
+        font-size: 14px;
+    }
+
+  
+  
+
+    .rentals-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .rentals-table th, .rentals-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .rentals-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .update-form {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+</style>

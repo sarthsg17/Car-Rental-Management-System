@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'); /* Import Google Fonts */
+
+body {
+    font-family: 'Lato', sans-serif;
+
+ /* Use Google Fonts for a modern look */
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    background-image: url("https://wallpapercave.com/wp/wp5805084.jpg"); 
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed;
+    color: white;
+}
+
+header {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('header-background.jpg'); /* Optional: Add a header background image */
+    background-size: cover;
+    background-position: center;
+    padding: 2em 0;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adds a slight shadow for depth */
+}
+
+header h1 {
+    font-size: 2.7em;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+nav a {
+    margin: 0 20px;
+    font-size: 1.1em;
+    color: #0066ff; /* Bright color for better contrast */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease; /* Adds a transition for hover effect */
+}
+
+nav a:hover {
+    color: #ff4500; /* Color change on hover */
+}
+
+main {
+    padding: 40px 20px;
+    font-size: 1.1em;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background for better readability */
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 1200px;
+}
+
+
+.car-image img {
+    width: 350px;
+    height: auto;
+    border-radius: 10px; /* Rounded corners for car image */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0); /* Shadow for a modern effect */
+    transition: transform 0.3s ease;
+}
+
+.car-image img:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+footer {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)); /* Adds a gradient background to the footer */
+    padding: 20px;
+    text-align: center;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3); /* Shadow effect */
+}
+
+footer p {
+    margin: 10px 0;
+    font-size: 0.9em;
+}
+
+footer .social-icons {
+    margin: 10px 0;
+}
+
+footer .social-icons a {
+    color: #ffd700; /* Matching footer links with navigation */
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 1.2em;
+}
+
+footer .social-icons a:hover {
+    color: #ff4500;
+}
+
+.logo {
+    width: 100px; /* Adjust as needed */
+    height: auto;
+    position: absolute; /* Position the logo */
+    top: 20px; /* Adjust for vertical alignment */
+    left: 60px; /* Adjust for horizontal alignment */
+    z-index: 10; /* Ensure it appears above other elements */
+    background-color: transparent; /* Ensure the logo background is transparent to match page */
+}

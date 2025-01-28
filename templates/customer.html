@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+    <title>Customer List</title>   
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Customer List</h1>
+        </header>
+
+        <!-- Form to Add a New Customer -->
+        <form action="/add_customer" method="POST" class="customer-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+            </div>
+
+            <div class="form-group1">
+                <label for="contact_number">Contact Number:</label>
+                <input type="text" id="contact_number" name="contact_number" required>
+            </div>
+
+            <div class="form-group1">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group1">
+                <label for="driver_license">Driver License Number:</label>
+                <input type="text" id="driver_license" name="driver_license" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">Add Customer</button>
+        </form>
+</div>
+
+<div>
+    <h2>Customer Records</h2>
+
+        
+<!-- Table to Display Customers -->
+<table class="customers-table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Contact Number</th>
+            <th>Email</th>
+            <th>Driver License</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer['first_name'] }}</td>
+            <td>{{ customer['last_name'] }}</td>
+            <td>{{ customer['contact_number'] }}</td>
+            <td>{{ customer['email'] }}</td>
+            <td>{{ customer['driver_license_number'] }}</td>
+            <td>{{ customer['address'] }}</td>
+            <td>
+                <button type="button" class="toggle-update-button">Edit</button>
+                <div class="update-form" style="display:none;">
+                    <form action="/update_customer/{{ customer['customer_id'] }}" method="POST">
+                        <input type="text" name="first_name" value="{{ customer['first_name'] }}" required>
+                        <input type="text" name="last_name" value="{{ customer['last_name'] }}" required>
+                        <input type="text" name="contact_number" value="{{ customer['contact_number'] }}" required>
+                        <input type="email" name="email" value="{{ customer['email'] }}" required>
+                        <input type="text" name="driver_license" value="{{ customer['driver_license_number'] }}" required>
+                        <textarea name="address" required>{{ customer['address'] }}</textarea>
+                        <button type="submit">Update</button>
+                    </form>
+                </div>
+                <form action="/delete_customer/{{ customer['customer_id'] }}" method="POST" style="display:inline;">
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+    <script>
+        document.querySelectorAll('.toggle-update-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const updateForm = this.nextElementSibling;
+                updateForm.style.display = updateForm.style.display === 'none' || updateForm.style.display === '' ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 600px; /* Limit container width */
+    margin: 0 auto; /* Center container */
+    padding: 20px;
+}
+
+.customer-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Space between rows */
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-group:last-child {
+    margin-right: 0; /* Remove margin for last element */
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"], input[type="email"], textarea {
+    width: 100%; /* Make inputs full width */
+    padding: 5px; /* Decreased padding */
+    margin-top: 5px;
+    margin-bottom: 5px; /* Reduced space between inputs */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 20px; /* Fixed height for input fields */
+    font-size: 14px; /* Adjusted font size */
+}
+
+textarea {
+    resize: none; /* Disable resizing */
+    height: 40px; /* Set a fixed height for the textarea */
+    padding: 5px; /* Adjusted padding for textarea */
+    font-size: 14px; /* Adjusted font size for textarea */
+}
+
+.submit-button{
+    background-color: #164a8e; /* Green */
+    color: white;
+    padding: 15px; /* Reduced padding for buttons */
+    border: none;
+    margin-right: 10px;
+    margin-left: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px; /* Consistent font size for buttons */
+}
+
+.submit-button:hover, .delete-button:hover {
+    background-color: #0f86ad; /* Darker green on hover */
+}
+
+.customers-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.customers-table th, .customers-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.customers-table th {
+    background-color: #f2f2f2;
+}
+
+h2 {
+    margin-top: 20px; /* Space above the Customer Records section */
+    margin-bottom: 10px; /* Space below the Customer Records section */
+}
+
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Space between rows */
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 10px; /* Add right margin for spacing */
+}
+
+.form-group:last-child {
+    margin-right: 0; /* Remove margin for last element */
+}
+
+/* Add this additional rule for last name input */
+.form-group:last-of-type {
+    margin-right: 0; /* Optional: to ensure the last form group doesn't have extra spacing */
+}
+
+/* Add space between the first name and last name groups */
+.form-group:nth-child(2) { /* This targets the last name group specifically */
+    margin-left: 10px; /* Adjust this value to set the desired spacing */
+}
+
+.form-group1 {
+    margin-left: 0px; /* Add margin to the contact number group */
+}
+
+</style>

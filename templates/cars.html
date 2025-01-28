@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='car.css') }}">
+    <title>Manage Cars</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Add a New Car</h1>
+        </header>
+
+        <!-- Form to Add a New Car -->
+        <form method="POST" action="/cars" class="car-form">
+            <div class="form-group">
+                <label for="make">Make:</label>
+                <input type="text" id="make" name="make" required>
+            </div>
+
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <input type="text" id="model" name="model" required>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" required>
+            </div>
+
+            <div class="form-group">
+                <label for="registration_number">Registration Number:</label>
+                <input type="text" id="registration_number" name="registration_number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="rental_price_per_day">Rental Price per Day:</label>
+                <input type="number" id="rental_price_per_day" name="rental_price_per_day" required>
+            </div>
+
+            <div class="form-group">
+                <label for="availability_status">Availability Status:</label>
+                <select id="availability_status" name="availability_status" required>
+                    <option value="available">Available</option>
+                    <option value="rented">Rented</option>
+                    <option value="under maintenance">Under Maintenance</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="last_maintenance_date">Last Maintenance Date:</label>
+                <input type="date" id="last_maintenance_date" name="last_maintenance_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="license_plate">License Plate:</label>
+                <input type="text" id="license_plate" name="license_plate" required>
+            </div>
+
+            <button type="submit" class="submit-button">Add Car</button>
+        </form>
+    </div>
+    <div>
+        <h2>Available Cars</h2>
+
+        <!-- Table to Display Available Cars -->
+        <table class="cars-table">
+            <thead>
+                <tr>
+                    <th>Car ID</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Year</th>
+                    <th>Registration Number</th>
+                    <th>Rental Price per Day</th>
+                    <th>Last Maintenance Date</th>
+                    <th>License Plate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car in cars %}
+                <tr>
+                    <td>{{ car['car_id'] }}</td>
+                    <td>{{ car['make'] }}</td>
+                    <td>{{ car['model'] }}</td>
+                    <td>{{ car['year'] }}</td>
+                    <td>{{ car['registration_number'] }}</td>
+                    <td>{{ car['rental_price_per_day'] }}</td>
+                    <td>{{ car['last_maintenance_date'] }}</td>
+                    <td>{{ car['license_plate'] }}</td>
+                    <td>
+                        <button type="button" class="toggle-update-button">Edit</button>
+                        <div class="update-form" style="display:none;">
+                            <form action="/update_car/{{ car['car_id'] }}" method="POST">
+                                <input type="text" name="make" value="{{ car['make'] }}" required>
+                                <input type="text" name="model" value="{{ car['model'] }}" required>
+                                <input type="number" name="year" value="{{ car['year'] }}" required>
+                                <input type="text" name="registration_number" value="{{ car['registration_number'] }}" required>
+                                <input type="number" name="rental_price_per_day" value="{{ car['rental_price_per_day'] }}" required>
+                                <select name="availability_status" required>
+                                    <option value="available" {% if car['availability_status'] == 'available' %}selected{% endif %}>Available</option>
+                                    <option value="rented" {% if car['availability_status'] == 'rented' %}selected{% endif %}>Rented</option>
+                                    <option value="under maintenance" {% if car['availability_status'] == 'under maintenance' %}selected{% endif %}>Under Maintenance</option>
+                                </select>
+                                <input type="date" name="last_maintenance_date" value="{{ car['last_maintenance_date'] }}" required>
+                                <input type="text" name="license_plate" value="{{ car['license_plate'] }}" required>
+                                <button type="submit">Update</button>
+                            </form>
+                        </div>
+                        <form action="/delete_car/{{ car['car_id'] }}" method="POST" style="display:inline;">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Toggle the display of the update form
+        document.querySelectorAll('.toggle-update-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const updateForm = button.nextElementSibling;
+                updateForm.style.display = updateForm.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
